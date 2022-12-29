@@ -157,8 +157,6 @@ get_exchange_rates_with_single_date <- function(date) {
   }
 }
 
-
-
 result <- get_exchange_rates_with_date_range("01.12.2022", "29.12.2022")
 #get_exchange_rates_with_single_date("5.12.2022")
 
