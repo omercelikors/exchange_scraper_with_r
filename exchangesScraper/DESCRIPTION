@@ -1,0 +1,11 @@
+Package: exchangesScraper
+Type: Package
+Title: This package crawls exchange rates from central bank site.
+Version: 0.1.0
+Author: Ömer Çelikörs
+Maintainer: Ömer Çelikörs <omercelikors.softdev@gmail.com>
+Description: You can obtain exchange rates of single date or date range by using
+             this package.
+License: GPL (>= 2)
+Encoding: UTF-8
+LazyData: true
