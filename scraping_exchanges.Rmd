@@ -2,9 +2,7 @@
 title: "Scraping of Exchange Rates"
 author: "Ömer Çelikörs"
 date: "2023-01-01"
-output:
-  pdf_document: default
-  word_document: default
+output: pdf_document
 fontsize: 11pt
 geometry: margin=1in
 ---
@@ -23,6 +21,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## 2.6. Get Exchange Rates Between Two Dates
 ## 2.7. Get Exchange Rates on a Single Date
 # 3. Test Package
+# 4. Essential Links
 
 # 1. Package Description
 *   This package aims to take **exchanges rates of Turkish Central Bank** from site.
@@ -152,7 +151,7 @@ scrape_target_url <- function(date) {
     {
       
       # Read the xml file.
-      exchange_rates_data= read_xml(target_url, 
+      exchange_rates_data <- read_xml(target_url, 
                                     options = c("NOBLANKS","NOWARNING"))
       Sys.sleep(1)
       
@@ -279,3 +278,12 @@ Tests of main functions:
 # invalidated date format
 # result2 <- get_exchange_rates_with_date_range("27-12-2022", "29.10.2022")
 ```
+
+# 4. Essential Links
+
+Main Link of Turkish Central Bank: 
+***https://www.tcmb.gov.tr/kurlar/kurlar_tr.html***
+Exchange Rates Link(example): 
+***https://www.tcmb.gov.tr/kurlar/202212/01122022.xml***
+Project Link on Github: 
+***https://github.com/omercelikors/exchanges_scraper_with_r***

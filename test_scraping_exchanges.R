@@ -63,7 +63,7 @@ scrape_target_url <- function(date) {
     {
       
       # Read the xml file.
-      exchange_rates_data= read_xml(target_url, 
+      exchange_rates_data <- read_xml(target_url, 
                                     options = c("NOBLANKS","NOWARNING"))
       Sys.sleep(1)
       
