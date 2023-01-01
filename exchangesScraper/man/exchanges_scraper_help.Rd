@@ -2,11 +2,11 @@
 \alias{exchangesScraper}
 \title{Scraper for Exchange Rates}
 \usage{
-get_exchange_rates_with_single_date(date)
-get_exchange_rates_with_date_range(start_date, end_date)
+\strong{get_exchange_rates_with_single_date(date)}
+\strong{get_exchange_rates_with_date_range(start_date, end_date)}
 }
 \description{
-This package crawls exchange rates of Central Bank.
+This package currently crawls exchange rates of Turkish Central Bank.
 Package consists of two functions. One of them works single parameter with date,
 other needs double parameters as start date and end date.
 }
@@ -44,5 +44,8 @@ Package returns data frame from both two functions.
 }
 
 \details{
-Request delay is 1 second after each request.
+* If you request a date belonging to holiday, there is no data on site.\cr
+* Request delay is 1 second after each request.\cr
+* This package will be expanded by including central bank exchange rates of other countries.\cr
+* Current main link is \strong{"https://www.tcmb.gov.tr/kurlar/kurlar_tr.html"}.\cr
 }

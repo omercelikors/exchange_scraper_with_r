@@ -1,5 +1,3 @@
-#https://www.tcmb.gov.tr/kurlar/kurlar_tr.html (main link)
-#options(warn=-1)
 install_packages_if_necessary <- function(packages) {
 
   # Install packages not yet installed
@@ -10,6 +8,11 @@ install_packages_if_necessary <- function(packages) {
 
   # Packages loading
   invisible(lapply(packages, library, character.only = TRUE))
+}
+
+convert_to_date <- function(date) {
+  date <- as.Date(date, "%d.%m.%Y")
+  return (date)
 }
 
 is_date_check <- function(date, date_name) {
@@ -26,6 +29,11 @@ is_date_check <- function(date, date_name) {
   }
 }
 
+find_diff_of_dates <- function(start_date, end_date) {
+  days_diff <- end_date - start_date
+  return (days_diff)
+}
+
 days_diff_check <- function(days_diff) {
   if (days_diff > 30 | days_diff < 0){
     validation_text <- "Validation error is occured. Day differences must
@@ -35,16 +43,6 @@ days_diff_check <- function(days_diff) {
     validation_text <- "Date range is valid."
     print(validation_text)
   }
-}
-
-find_diff_of_dates <- function(start_date, end_date) {
-  days_diff <- end_date - start_date
-  return (days_diff)
-}
-
-convert_to_date <- function(date) {
-  date <- as.Date(date, "%d.%m.%Y")
-  return (date)
 }
 
 scrape_target_url <- function(date) {
@@ -65,7 +63,8 @@ scrape_target_url <- function(date) {
     {
 
       # Read the xml file.
-      exchange_rates_data= read_xml(target_url, options = c("NOBLANKS","NOWARNING"))
+      exchange_rates_data= read_xml(target_url,
+                                    options = c("NOBLANKS","NOWARNING"))
       Sys.sleep(1)
 
       # Parse the exchange_rate_data into R structure representing XML tree.
@@ -73,7 +72,7 @@ scrape_target_url <- function(date) {
 
       # Convert the parsed XML to a dataframe.
       exchange_rates <- xmlToDataFrame(nodes=getNodeSet(exchange_rates_xml,
-                                            "//Currency")) # Global variable.
+                                            "//Currency"))
       exchange_rates$Date <- format(date, "%d.%m.%Y")
 
       return (exchange_rates)
@@ -88,7 +87,8 @@ scrape_target_url <- function(date) {
 
         if (!is_include){
           exchange_rates <- NULL
-          print(paste("Error text:", e, "Date:", format(date, "%d.%m.%Y"), sep=" "))
+          print(paste("Error text:", e, "Date:", format(date, "%d.%m.%Y"),
+                      sep=" "))
           return (exchange_rates)
         } else {
           return (404)

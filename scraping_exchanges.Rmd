@@ -1,20 +1,86 @@
+---
+title: "Scraping of Exchange Rates"
+author: "Ömer Çelikörs"
+date: "2023-01-01"
+output:
+  pdf_document: default
+  word_document: default
+fontsize: 11pt
+geometry: margin=1in
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Contents
+# 1. Package Description
+# 2. Functions Used in Package  
+## 2.1. Package Install
+## 2.2. Convert from String to Date Object and Check Date
+## 2.3. Find Differences of Two Dates
+## 2.4. Check Length of Date Range
+## 2.5. Scrape Target Url
+## 2.6. Get Exchange Rates Between Two Dates
+## 2.7. Get Exchange Rates on a Single Date
+
+# 1. Package Description
+*   This package aims to take **exchanges rates of Turkish Central Bank** from site.
+Package can be expanded in new versions. **Exchanges rates of new countries**
+can be added with **country parameters**.
+*   Package includes **two main functions**. One of them is called  
+**"get_exchange_rates_with_single_date(date)"** and other function name is  
+**"get_exchange_rates_with_date_range(start_date, end_date)"**.
+*   Main functions return exchanges rates of related date as a **data frame**.
+*   All date formats have to be format of **"DD.MM.YYYY"**.
+*   Date range must be **between 0 and 30**.
+*   If status code of response equals to **404**, then it means that 
+**there is no data related to requested date**. Also, data frame does not 
+contain date of 404 but it can be found on output of code execution.
+*   When any error exposes **during request**, package catches error and 
+**gives report to client**. In addition, while scraping site if any error is 
+occured on **only one of the requests**, this request is **skipped** and 
+**passed another** request. As a result, code execution is 
+**not stopped** but error text is **shown to client**.
+*   Delay between requests are **1 seconds**. This numeric value is implemented
+as hard-coded. If parameter of changing of delay is added, this situation might
+lead to be sent request with a little delay by client. It is aimed not to create
+dense server traffic.
+
+# 2. Functions Used in Package
+
+## 2.1. Package Install
+
+Function checks related packages **whether they are installed or not**. If a package
+is not installed, function installs pacakage or if a package is already installed
+then function imports pacakage:
+
+```{r install_packages_if_necessary}
 install_packages_if_necessary <- function(packages) {
   
-  # Install packages not yet installed
+  # Install packages not yet installed.
   installed_packages <- packages %in% rownames(installed.packages())
   if (any(installed_packages == FALSE)) {
     install.packages(packages[!installed_packages])
   }
   
-  # Packages loading
+  # Packages loading.
   invisible(lapply(packages, library, character.only = TRUE))
 }
+```
 
+## 2.2. Convert from String to Date Object and Check Date
+
+String which is inserted by client is converted to date object. 
+Obtained data is checked by looking its format. If it is not validated,
+an error is thrown and code execution is stopped:
+
+```{r convert_date}
 convert_to_date <- function(date) {
   date <- as.Date(date, "%d.%m.%Y")
   return (date)
 }
-
+```
+```{r date_check}
 is_date_check <- function(date, date_name) {
   if (is.na(date) ){
     str1 <- date_name
@@ -28,12 +94,26 @@ is_date_check <- function(date, date_name) {
     print(validation_text)
   }
 }
+```
 
+## 2.3. Find Differences of Two Dates
+
+When "get_exchange_rates_with_date_range" method is used, this function is 
+called:
+
+```{r find_diff_of_dates}
 find_diff_of_dates <- function(start_date, end_date) {
   days_diff <- end_date - start_date
   return (days_diff)
 }
+```
 
+## 2.4. Check Length of Date Range
+
+Date range has to be between 0 and 30. Otherwise, it leads to occur validation 
+error:
+
+```{r days_diff_check}
 days_diff_check <- function(days_diff) {
   if (days_diff > 30 | days_diff < 0){
     validation_text <- "Validation error is occured. Day differences must
@@ -44,7 +124,15 @@ days_diff_check <- function(days_diff) {
     print(validation_text)
   }
 }
+```
 
+## 2.5. Scrape Target Url
+
+Function provides request to target endpoint. If any error is obtained, it 
+throws error text. If any 404 http error is taken, this means that there is no 
+data on site:
+
+```{r scrape_target_url}
 scrape_target_url <- function(date) {
   
   install_packages_if_necessary(c("curl", "xml2", "XML"))
@@ -98,7 +186,15 @@ scrape_target_url <- function(date) {
   )
   
 }
+```
 
+## 2.6. Get Exchange Rates Between Two Dates
+
+This is main function. It gets two parameters as start_date and end_date.
+Function calls helper functions. As a result, function returns all exchange rates
+between two dates as a data frame structure:
+
+```{r get_exchange_rates_with_date_range}
 get_exchange_rates_with_date_range <- function(start_date, end_date) {
   start_date <- convert_to_date(start_date)
   end_date <- convert_to_date(end_date)
@@ -130,7 +226,15 @@ get_exchange_rates_with_date_range <- function(start_date, end_date) {
   
   return (result_exchange_rates)
 }
+```
 
+## 2.7. Get Exchange Rates on a Single Date
+
+This is also main function. Function uses related helper functions and reaches
+exchange rates only for a single date. At the end, function returns data frame
+structure:
+
+```{r get_exchange_rates_with_single_date}
 get_exchange_rates_with_single_date <- function(date) {
   date <- convert_to_date(date)
   is_date_check(date, "Date")
@@ -149,14 +253,4 @@ get_exchange_rates_with_single_date <- function(date) {
     
   }
 }
-
-#result1 <- get_exchange_rates_with_single_date("5.12.2022")
-#result2 <- get_exchange_rates_with_date_range("01.12.2022", "29.12.2022")
-
-
-
-
-
-
-
-
+```
